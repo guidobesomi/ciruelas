@@ -87,16 +87,23 @@ def loop_interno(menus,funciones,datos_temporales):
 
                 if not (nombre_parametros_input == ''):
 
-                    #FALTA VER EL CASO EN QUE NO SE HAN AGREGADO LOS PARAMETROS TODAVIA
-                    parametros_input = datos_temporales[nombre_parametros_input]
+                    if nombre_parametros_input in datos_temporales:
 
-                    if not (nombre_parametros_output == ''):
+                        parametros_input = datos_temporales[nombre_parametros_input]
 
-                        datos_temporales[nombre_parametros_output] = funcion(parametros_input)
+                        if not (nombre_parametros_output == ''):
+
+                            datos_temporales[nombre_parametros_output] = funcion(parametros_input)
+
+                        else:
+
+                            funcion(parametros_input)
 
                     else:
 
-                        funcion(parametros_input)
+                        print u"\nFALTAN DATOS PARA REALIZAR ESTA ACCIÓN: %s" % nombre_parametros_input
+
+                        time.sleep(1)
 
                 else:
 
@@ -108,7 +115,7 @@ def loop_interno(menus,funciones,datos_temporales):
 
                         funcion()
 
-        if choice == (len(menus[0]) - 1):
+        elif choice == (len(menus[0]) - 1):
 
             print u"\nHAS ELEGIDO LA OPCIÓN %d: %s" % (len(menus[0]) - 1 , menus[0][len(menus[0])-1][3:])
 
@@ -116,9 +123,9 @@ def loop_interno(menus,funciones,datos_temporales):
 
             return False
 
-        if not ((choice - 1) in range(len(menus[0]) - 1)):
+        else:
 
-            print u"\nESA NO ES UNA OPCCIÓN VÁLIDA. VUELVE A INTENTARLO."
+            print u"\nESA NO ES UNA OPCIÓN VÁLIDA. VUELVE A INTENTARLO."
 
             time.sleep(1)
 
@@ -142,30 +149,32 @@ def ingresar_datos():
 
     time.sleep(0.7)
 
-    return [calibre_promedio,kg_ha_secos_promedio]
+    return [calibre_promedio , kg_ha_secos_promedio]
 
 def estimar_curva_produccion(calibre_kg_input_lista):
 
     calibre_promedio = calibre_kg_input_lista[0]
     kg_ha_secos_promedio = calibre_kg_input_lista[1]
 
-    print "\nESTIMANDO...\n"
+    print "\nESTIMANDO..."
 
     time.sleep(1.5)
 
     # [] = estimar_parametros_curva(calibre_kg_lista[0],calibre_kg_lista[1])
 
-    pendiente = 1.0
-    corte = -2.0
+    pendiente = 135.0
+    corte = -25.0
 
-    print u"\n¡LA ESTIMACIÓN HA SIDO LLEVADA A CABO EXITOSAMENTE!\n"
+    print u"\n¡LA ESTIMACIÓN HA SIDO LLEVADA A CABO EXITOSAMENTE!"
 
     time.sleep(0.7)
 
-    print "PENDIENTE = " , pendiente
+    print "\nPENDIENTE = " , pendiente
     print "PUNTO DE CORTE = " , corte
 
-    return [pendiente,corte]
+    time.sleep(1.5)
+
+    return [pendiente , corte]
 
 def graficar_curva_estimada(pendiente_corte_lista):
 
@@ -203,26 +212,75 @@ def predecir_produccion(pendiente_corte_lista):
 
     print u"\nLOS KILOS SECOS POR HECTÁREA ESTIMADOS SON: %d KG/HA\n" % (corte + pendiente * calibre)
 
+    time.sleep(1)
+
+    return
+
+def optimizar(pendiente_corte_lista):
+
+    pendiente = pendiente_corte_lista[0]
+    corte = pendiente_corte_lista[1]
+
+    print "\nOPTIMIZANDO..."
+
+    time.sleep(1.5)
+
+    margen_bruto_final = 4500.0
+    calibre_optimo = 73.0
+    presion_optima = 3.6
+
+    print u"\n¡LA OPTIMIZACIÓN HA SIDO LLEVADA A CABO EXITOSAMENTE!"
+
+    time.sleep(0.7)
+
+    print "\nMARGEN BRUTO FINAL = " , margen_bruto_final
+    print "CALIBRE OPTIMO = " , calibre_optimo
+    print "PRESION OPTIMA = " , presion_optima
+
+    time.sleep(2)
+
+    return [margen_bruto_final , calibre_optimo , presion_optima]
+
+def graficar():
+
+    print "\nGRAFICANDO..."
+
+    time.sleep(0.5)
+
+    X = np.arange(2000) / 10.0
+    Y = X ** 2.0 + 3.0
+
+    plt.plot(X,Y)
+    plt.xlabel('EJE X')
+    plt.ylabel('EJE Y')
+    plt.title(u'CURVA DE INTERÉS')
+    plt.grid(True)
+    plt.show()
+
     return
 
 # ------------------------------------------------------------------------------
 # ---------------------------------- LOOP --------------------------------------
 # ------------------------------------------------------------------------------
 
-menu_principal = [u"MENÚ PRINCIPAL",u"1. CURVAS DE PRODUCCIÓN",u"2. OPCIÓN 2",
+menu_principal = [u"MENÚ PRINCIPAL",u"1. CURVAS DE PRODUCCIÓN",u"2. MODELO DE OPTIMIZACIÓN",
                   u"3. OPCIÓN 3",u"4. OPCIÓN 4",u"5. SALIR"]
 menu_1 = [u"MENÚ CURVAS DE PRODUCCIÓN",u"1. INGRESAR DATOS",
           u"2. ESTIMAR CURVA DE PRODUCCIÓN",u"3. GRAFICAR CURVA ESTIMADA",
           u"4. PREDECIR PRODUCCION",u"5. VOLVER AL MENÚ PRINCIPAL"]
-menu_2 = [u"MENÚ 2",u"1. OPCIÓN 1",u"2. OPCIÓN 2",
-          u"3. OPCIÓN 3",u"4. OPCIÓN 4",u"5. VOLVER AL MENÚ PRINCIPAL"]
+menu_2 = [u"MENÚ MODELO DE OPTIMIZACIÓN",u"1. MAXIMIZAR MARGEN BRUTO FINAL",u"2. GRAFICAR",
+          u"3. GRAFICAR",u"4. GRAFICAR",u"5. VOLVER AL MENÚ PRINCIPAL"]
 
 menus = [menu_principal,[menu_1,[],[],[],[]],[menu_2,[],[],[],[]],[],[]]
 
-funciones = {menu_1[1]:[ingresar_datos,'','calibre_kg_input'],
-             menu_1[2]:[estimar_curva_produccion,'calibre_kg_input','pendiente_corte_estimado'],
-             menu_1[3]:[graficar_curva_estimada,'pendiente_corte_estimado',''],
-             menu_1[4]:[predecir_produccion,'pendiente_corte_estimado','']}
+funciones = {menu_1[1] : [ingresar_datos , '' , 'calibre_kg_input'] ,
+             menu_1[2] : [estimar_curva_produccion , 'calibre_kg_input' , 'pendiente_corte_estimado'] ,
+             menu_1[3] : [graficar_curva_estimada , 'pendiente_corte_estimado' , ''] ,
+             menu_1[4] : [predecir_produccion , 'pendiente_corte_estimado' , ''] ,
+             menu_2[1] : [optimizar , 'pendiente_corte_estimado' , 'output_optimizacion'] ,
+             menu_2[2] : [graficar , '' , ''] ,
+             menu_2[3] : [graficar , '' , ''] ,
+             menu_2[4] : [graficar , '' , '']}
 
 datos_temporales = {}
 
