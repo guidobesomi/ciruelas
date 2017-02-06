@@ -259,19 +259,24 @@ def graficar():
 
     return
 
+def nada_por_ahora():
+
+    return
 # ------------------------------------------------------------------------------
 # ---------------------------------- LOOP --------------------------------------
 # ------------------------------------------------------------------------------
 
 menu_principal = [u"MENÚ PRINCIPAL",u"1. CURVAS DE PRODUCCIÓN",u"2. MODELO DE OPTIMIZACIÓN",
-                  u"3. OPCIÓN 3",u"4. OPCIÓN 4",u"5. SALIR"]
+                  u"3. GESTIÓN DE DATOS",u"4. OPCIÓN 4",u"5. SALIR"]
 menu_1 = [u"MENÚ CURVAS DE PRODUCCIÓN",u"1. INGRESAR DATOS",
           u"2. ESTIMAR CURVA DE PRODUCCIÓN",u"3. GRAFICAR CURVA ESTIMADA",
           u"4. PREDECIR PRODUCCION",u"5. VOLVER AL MENÚ PRINCIPAL"]
 menu_2 = [u"MENÚ MODELO DE OPTIMIZACIÓN",u"1. MAXIMIZAR MARGEN BRUTO FINAL",u"2. GRAFICAR",
           u"3. GRAFICAR",u"4. GRAFICAR",u"5. VOLVER AL MENÚ PRINCIPAL"]
+menu_3 = [u"MENÚ GESTIÓN DE DATOS",u"1. AÑADIR DATOS A LA BASE",u"2. VISUALIZAR DATOS",
+          u"3. VOLVER AL MENÚ PRINCIPAL"]
 
-menus = [menu_principal,[menu_1,[],[],[],[]],[menu_2,[],[],[],[]],[],[]]
+menus = [menu_principal,[menu_1,[],[],[],[]],[menu_2,[],[],[],[]],[menu_3,[],[]],[]]
 
 funciones = {menu_1[1] : [ingresar_datos , '' , 'calibre_kg_input'] ,
              menu_1[2] : [estimar_curva_produccion , 'calibre_kg_input' , 'pendiente_corte_estimado'] ,
@@ -280,7 +285,9 @@ funciones = {menu_1[1] : [ingresar_datos , '' , 'calibre_kg_input'] ,
              menu_2[1] : [optimizar , 'pendiente_corte_estimado' , 'output_optimizacion'] ,
              menu_2[2] : [graficar , '' , ''] ,
              menu_2[3] : [graficar , '' , ''] ,
-             menu_2[4] : [graficar , '' , '']}
+             menu_2[4] : [graficar , '' , ''] ,
+             menu_3[1] : [nada_por_ahora , '' , ''] ,
+             menu_3[2] : [nada_por_ahora , '' , '']}
 
 datos_temporales = {}
 
